@@ -64,7 +64,7 @@ class Main extends Component {
     const promise = request('list/get', { page })
       .then(result => {
         if (page > this.state.page) {
-          result = result.map((song, index) => ({ ...song, index }));
+          result = result.map((song, index) => ({ ...song, index: (index + this.state.songs.length) }));
           this.setState({
             page,
             loading: false,
