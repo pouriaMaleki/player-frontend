@@ -15,8 +15,8 @@ class App extends Component {
       <Provider store={store}>
         <Router history={history}>
           <div className='App'>
-            <Route path='/login' component={Login} />
-            <Route path='/main' component={Main} />
+            {/* <Route path='/login' component={Login} /> */}
+            <Route path='/' component={Main} />
           </div>
         </Router>
       </Provider>
