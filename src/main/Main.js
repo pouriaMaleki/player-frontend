@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withStyles } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
+import { CircularProgress } from 'material-ui/Progress';
 import Player from './Player';
 import Music from './Music';
 import request from '../request';
@@ -30,20 +31,70 @@ const styles = theme => ({
   music: {
     margin: 5,
     display: 'inline-block'
+  },
+  card: {
+    height: 50,
+    lineHeight: '50px',
+    padding: 10,
+    cursor: 'pointer'
   }
 });
 
 class Main extends Component {
   state = {
-    songs: []
+    loading: false,
+    songs: [],
+    page: 0
   };
 
   componentDidMount() {
-    request('list/get', { page: 1 }).then(result => this.setState({ songs: this.state.songs.concat(result) }));
+    this.getSongList(this.state.page + 1);
+  }
+
+  loadMore = () => {
+    this.getSongList(this.state.page + 1);
+  }
+
+  getSongList = page => {
+    if (this.state.loading) {
+      return;
+    }
+    this.setState({ loading: true });
+    const promise = request('list/get', { page })
+      .then(result => {
+        if (page > this.state.page) {
+          this.setState({
+            page,
+            loading: false,
+            songs: this.state.songs.concat(result)
+          });
+        }
+      });
+    return promise;
   }
 
   render() {
     const { classes } = this.props;
+
+    let songListElements = this.state.songs.map(song => (
+      <Music
+        className={classes.music}
+        key={song.id}
+        data={song}
+      />
+    ));
+
+    songListElements = songListElements.concat(
+      <Paper
+        className={classes.card}
+        elevation={2}
+        onClick={this.loadMore}
+      >
+        {
+          this.state.loading ? <CircularProgress className={classes.progress} /> : 'Get more...'
+        }
+      </Paper>
+    );
 
     return (
       <div>
@@ -51,7 +102,7 @@ class Main extends Component {
           <Player />
         </Paper>
         <div className={classes.songList}>
-          {this.state.songs.map(song => <Music className={classes.music} key={song.id} data={song} />)}
+          {songListElements}
         </div>
       </div>
     );
