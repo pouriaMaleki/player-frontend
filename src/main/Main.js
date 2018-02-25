@@ -53,7 +53,7 @@ class Main extends Component {
   }
 
   loadMore = () => {
-    this.getSongList(this.state.page + 1);
+    return this.getSongList(this.state.page + 1);
   }
 
   getSongList = page => {
@@ -76,7 +76,12 @@ class Main extends Component {
   }
 
   playListIndex = index => {
-    this.props.dispatch({ type: 'selectSong', data: this.state.songs[index] });
+    if (index >= this.state.songs.length) {
+      this.loadMore().then(() => this.playListIndex(index));
+    }
+    else {
+      this.props.dispatch({ type: 'selectSong', data: this.state.songs[index] });
+    }
   }
 
   render() {
