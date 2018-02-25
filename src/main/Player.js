@@ -4,6 +4,8 @@ import { withStyles } from 'material-ui/styles';
 import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
 import PlayArrowIcon from 'material-ui-icons/PlayArrow';
+import SkipNextIcon from 'material-ui-icons/SkipNext';
+import SkipPreviousIcon from 'material-ui-icons/SkipPrevious';
 import PauseIcon from 'material-ui-icons/Pause';
 import SongInfo from './SongInfo';
 
@@ -14,7 +16,15 @@ const styles = theme => ({
     maxWidth: 800,
     height: 60
   }),
+  prev: {
+    position: 'absolute',
+    right: 120
+  },
   play: {
+    position: 'absolute',
+    right: 60
+  },
+  next: {
     position: 'absolute',
     right: 0
   },
@@ -44,8 +54,18 @@ class Player extends Component {
 
   audio = new window.Audio();
 
-  handleClick = () => {
+  handlePlay = () => {
     this.props.dispatch({ type: 'toggle' });
+  }
+
+  handleSkipPrev = () => {
+    if (this.props.playingInfo.index > 0) {
+      this.props.playListIndex(this.props.playingInfo.index - 1);
+    }
+  }
+
+  handleSkipNext = () => {
+    this.props.playListIndex(this.props.playingInfo.index + 1);
   }
 
   render() {
@@ -65,10 +85,27 @@ class Player extends Component {
         <Button
           variant='fab'
           color='primary'
+          className={classes.prev}
+          onClick={this.handleSkipPrev}
+          disabled={this.props.playingInfo.index === 0}
+        >
+          <SkipPreviousIcon />
+        </Button>
+        <Button
+          variant='fab'
+          color='primary'
           className={classes.play}
-          onClick={this.handleClick}
+          onClick={this.handlePlay}
         >
           {icon}
+        </Button>
+        <Button
+          variant='fab'
+          color='primary'
+          className={classes.next}
+          onClick={this.handleSkipNext}
+        >
+          <SkipNextIcon />
         </Button>
         <SongInfo
           className={classes.songInfo}

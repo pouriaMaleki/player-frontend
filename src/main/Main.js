@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { withStyles } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
 import { CircularProgress } from 'material-ui/Progress';
@@ -63,6 +64,7 @@ class Main extends Component {
     const promise = request('list/get', { page })
       .then(result => {
         if (page > this.state.page) {
+          result = result.map((song, index) => ({ ...song, index }));
           this.setState({
             page,
             loading: false,
@@ -71,6 +73,10 @@ class Main extends Component {
         }
       });
     return promise;
+  }
+
+  playListIndex = index => {
+    this.props.dispatch({ type: 'selectSong', data: this.state.songs[index] });
   }
 
   render() {
@@ -88,6 +94,7 @@ class Main extends Component {
       <Paper
         className={classes.card}
         elevation={2}
+        key='loadmore'
         onClick={this.loadMore}
       >
         {
@@ -99,7 +106,7 @@ class Main extends Component {
     return (
       <div>
         <Paper className={classes.player} elevation={4}>
-          <Player />
+          <Player playListIndex={this.playListIndex} />
         </Paper>
         <div className={classes.songList}>
           {songListElements}
@@ -109,4 +116,8 @@ class Main extends Component {
   }
 }
 
-export default withStyles(styles)(Main);
+function mapStateToProps(store) {
+  return store['main/player'].toObject();
+}
+
+export default connect(mapStateToProps, null)(withStyles(styles)(Main));
