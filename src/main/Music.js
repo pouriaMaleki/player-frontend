@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import classnames from 'classnames';
 import { withStyles } from 'material-ui/styles';
 import IconButton from 'material-ui/IconButton';
@@ -22,11 +23,9 @@ const styles = theme => ({
   }
 });
 
-class RecipeReviewCard extends React.Component {
-  state = { expanded: false };
-
-  handleExpandClick = () => {
-    this.setState({ expanded: !this.state.expanded });
+class Music extends React.Component {
+  handleClick = () => {
+    this.props.dispatch({ type: 'selectSong', data: this.props.data });
   };
 
   render() {
@@ -36,6 +35,7 @@ class RecipeReviewCard extends React.Component {
       <Paper
         className={classnames(classes.card, this.props.className)}
         elevation={2}
+        onClick={this.handleClick}
       >
         <SongInfo
           isSmall
@@ -51,4 +51,8 @@ class RecipeReviewCard extends React.Component {
   }
 }
 
-export default withStyles(styles)(RecipeReviewCard);
+function mapStateToProps(store) {
+  return store['main/player'].toObject();
+}
+
+export default connect(mapStateToProps, null)(withStyles(styles)(Music));
