@@ -4,6 +4,7 @@ import classnames from 'classnames';
 import { withStyles } from 'material-ui/styles';
 import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui-icons/MoreVert';
+import EqualizerIcon from 'material-ui-icons/Equalizer';
 import Paper from 'material-ui/Paper';
 import SongInfo from './SongInfo';
 
@@ -20,6 +21,11 @@ const styles = theme => ({
     position: 'absolute',
     right: 0,
     top: 10
+  },
+  playingIcon: {
+    position: 'absolute',
+    right: 40,
+    top: 23
   }
 });
 
@@ -30,6 +36,11 @@ class Music extends React.Component {
 
   render() {
     const { classes, data } = this.props;
+
+    let playing = null;
+    if (this.props.nowPlaying) {
+      playing = <EqualizerIcon className={classes.playingIcon} />;
+    }
 
     return (
       <Paper
@@ -46,6 +57,7 @@ class Music extends React.Component {
         <IconButton className={classes.moreIcon}>
           <MoreVertIcon />
         </IconButton>
+        {playing}
       </Paper>
     );
   }

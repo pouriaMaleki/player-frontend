@@ -92,6 +92,7 @@ class Main extends Component {
         className={classes.music}
         key={song.id}
         data={song}
+        nowPlaying={this.props.playingInfo && this.props.playingInfo.id === song.id}
       />
     ));
 
