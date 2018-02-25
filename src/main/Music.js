@@ -11,7 +11,7 @@ const styles = theme => ({
     position: 'relative',
     direction: 'ltr',
     textAlign: 'left',
-    maxWidth: 400,
+    width: 350,
     padding: 10,
     cursor: 'pointer'
   },
@@ -30,11 +30,19 @@ class RecipeReviewCard extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, data } = this.props;
 
     return (
-      <Paper className={classnames(classes.card, this.props.className)} elevation={2}>
-        <SongInfo isSmall />
+      <Paper
+        className={classnames(classes.card, this.props.className)}
+        elevation={2}
+      >
+        <SongInfo
+          isSmall
+          title={data.songname}
+          subTitle={data.artist}
+          image={data.poster}
+        />
         <IconButton className={classes.moreIcon}>
           <MoreVertIcon />
         </IconButton>

@@ -3,6 +3,7 @@ import { withStyles } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
 import Player from './Player';
 import Music from './Music';
+import request from '../request';
 
 const styles = theme => ({
   container: theme.mixins.gutters({
@@ -23,7 +24,7 @@ const styles = theme => ({
   songList: {
     paddingTop: 90,
     margin: 'auto',
-    maxWidth: 740,
+    maxWidth: 760,
     textAlign: 'left'
   },
   music: {
@@ -34,18 +35,12 @@ const styles = theme => ({
 
 class Main extends Component {
   state = {
-    name: ''
+    songs: []
   };
 
-  handleChange = name => event => {
-    this.setState({
-      [name]: event.target.value
-    });
-  };
-
-  handleSubmit = event => {
-    event.preventDefault();
-  };
+  componentDidMount() {
+    request('list/get', { page: 1 }).then(result => this.setState({ songs: this.state.songs.concat(result) }));
+  }
 
   render() {
     const { classes } = this.props;
@@ -56,7 +51,7 @@ class Main extends Component {
           <Player />
         </Paper>
         <div className={classes.songList}>
-          {[1, 2, 3, 4, 5, 6, 7].map(index => <Music className={classes.music} key={index} />)}
+          {this.state.songs.map(song => <Music className={classes.music} key={song.id} data={song} />)}
         </div>
       </div>
     );

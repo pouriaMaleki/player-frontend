@@ -6,7 +6,7 @@ import classnames from 'classnames';
 
 const styles = theme => ({
   container: theme.mixins.gutters({
-    position: 'relative',
+    position: 'relative'
   }),
   albumArt: {
     display: 'inline-block',
@@ -34,17 +34,17 @@ class Player extends Component {
     return (
       <div className={classnames(classes.container, this.props.className)}>
         <Avatar
-          src='/album-art.jpg'
+          src={this.props.image}
           className={classnames(classes.albumArt, {
             [classes.smallAlbumArt]: isSmall
           })}
         />
         <div className={classes.songInfo}>
           <Typography {...(isSmall ? {} : { variant: 'headline' })} component={isSmall ? 'h4' : 'h3'}>
-            Umbrella
+            {this.props.title}
           </Typography>
           <Typography component='p'>
-            Rihanna, Jay-Z. Good Girl Gone Bad.
+            {this.props.subTitle}
           </Typography>
         </div>
       </div>
